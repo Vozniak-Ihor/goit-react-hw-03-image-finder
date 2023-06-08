@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import css from './Searchbar.module.css'
+import css from './Searchbar.module.css';
 
 export class Searchbar extends Component {
   state = {
@@ -12,6 +12,10 @@ export class Searchbar extends Component {
 
   onSubmit = event => {
     event.preventDefault();
+    if (this.state.value === '') {
+      alert('You have not entered anything');
+      return;
+    }
     this.props.onSubmit(this.state.value);
   };
 
@@ -20,6 +24,7 @@ export class Searchbar extends Component {
       <header className={css.Searchbar}>
         <form className={css.SearchForm} onSubmit={this.onSubmit}>
           <button type="submit" className={css.SearchFormButton}>
+            🔍
             <span className={css.SearchFormButtonLabel}>Search</span>
           </button>
 

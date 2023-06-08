@@ -3,7 +3,9 @@ import { Component } from 'react';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import { Searchbar } from 'components/Searchbar/Searchbar';
 import { Button } from 'components/Button/Button';
-import css from "./ImageGallery.module.css"
+import { Loader } from 'components/Loader/Loader';
+import { Modal } from 'components/Modal/Modal';
+import css from './ImageGallery.module.css';
 import api from '../service/image-service';
 
 export class Gallery extends Component {
@@ -11,7 +13,7 @@ export class Gallery extends Component {
     images: [],
     query: '',
     page: 1,
-    isEmpty: true,
+    isEmpty: false,
     isVisible: false,
     error: null,
     isLoading: false,
@@ -29,9 +31,11 @@ export class Gallery extends Component {
       images: [],
       query: value,
       page: 1,
-      isEmpty: true,
+      isEmpty: false,
       isVisible: false,
       error: null,
+      isLoading: true,
+      loader: true,
     });
   };
 
@@ -51,33 +55,35 @@ export class Gallery extends Component {
           images: [...prevState.images, ...hits],
           showButton: page < Math.ceil(totalHits / 12),
           isVisible: true,
+          isLoading: false,
         }));
       })
       .catch(error => {
         this.setState({ error });
       })
       .finally(() => {
-        this.setState({ isLoader: false, inactiveButton: false });
+          // loader: true,
+        this.setState({ isLoader: false, loader: false });
       });
   };
 
   onLoadeMore = () => {
-    this.setState(prevState => ({ page: prevState.page + 1 }));
+    this.setState(prevState => ({ page: prevState.page + 1 ,loader:true}));
   };
 
   render() {
-    const { images, isEmpty, isVisible, error, isLoading } = this.state;
+    const { images, isEmpty, isVisible, error, isLoading , loader} = this.state;
     return (
       <>
         <Searchbar onSubmit={this.onSubmit} />
+        {isEmpty && <b textAlign="center">Sorry. There are no images ... 😭</b>}
+        {error && <b textAlign="center">Sorry.{error} 😭</b>}
         <ul className={css.ImageGallery}>
           {images.map(item => (
             <ImageGalleryItem
               key={item.id}
               image={item.webformatURL}
               alt={item.tags}
-              largeImage={item.largeImageURL}
-              handleClick={this.handleModalClick}
             />
           ))}
         </ul>
@@ -85,8 +91,13 @@ export class Gallery extends Component {
           <Button
             onLoadeMore={this.onLoadeMore}
             isLoading={this.state.isLoading}
+            text={isLoading ? 'Loading' : 'Show more'}
           />
         )}
+        {loader && <Loader />}
+        {images.map(item => (
+          <Modal img={item.largeImageURL} />
+        ))}
       </>
     );
   }
