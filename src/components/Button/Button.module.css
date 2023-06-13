@@ -16,10 +16,8 @@
   z-index: 1;
 }
 
-.Button:hover,
-.Button:focus {
+.Button:hover{
   background: white;
-  color: black;
   border: 2px solid #ffffff;
 }
 
