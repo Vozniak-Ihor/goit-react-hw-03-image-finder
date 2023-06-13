@@ -36,6 +36,8 @@ export class Gallery extends Component {
       error: null,
       isLoading: true,
       loader: true,
+      showModal: false,
+      largeImage: '',
     });
   };
 
@@ -62,17 +64,35 @@ export class Gallery extends Component {
         this.setState({ error });
       })
       .finally(() => {
-          // loader: true,
+        // loader: true,
         this.setState({ isLoader: false, loader: false });
       });
   };
 
+  handleModalClick = largeImage => {
+    this.setState({ largeImage, showModal: true });
+    console.log(this.state.largeImage);
+  };
+
   onLoadeMore = () => {
-    this.setState(prevState => ({ page: prevState.page + 1 ,loader:true}));
+    this.setState(prevState => ({ page: prevState.page + 1, loader: true }));
+  };
+
+  onClose = () => {
+    this.setState({ showModal: false });
   };
 
   render() {
-    const { images, isEmpty, isVisible, error, isLoading , loader} = this.state;
+    const {
+      images,
+      isEmpty,
+      isVisible,
+      error,
+      largeImage,
+      isLoading,
+      loader,
+      showModal,
+    } = this.state;
     return (
       <>
         <Searchbar onSubmit={this.onSubmit} />
@@ -84,6 +104,8 @@ export class Gallery extends Component {
               key={item.id}
               image={item.webformatURL}
               alt={item.tags}
+              largeImage={item.largeImageURL}
+              handleClick={this.handleModalClick}
             />
           ))}
         </ul>
@@ -95,9 +117,7 @@ export class Gallery extends Component {
           />
         )}
         {loader && <Loader />}
-        {images.map(item => (
-          <Modal img={item.largeImageURL} />
-        ))}
+        {showModal && <Modal largeImage={largeImage} onClose={this.onClose} />}
       </>
     );
   }

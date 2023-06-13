@@ -1,16 +1,34 @@
 import css from './Modal.module.css';
-import * as basicLightbox from 'basiclightbox';
+import React, { Component } from 'react';
 
-export const Modal = ({img}) => {
- 	return basicLightbox
-    .create(
-      `
-		  <div className={css.Overlay}>
+export class Modal extends Component {
+  componentDidMount() {
+    window.addEventListener('keydown', this.handleKeydown);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('keydown', this.handleKeydown);
+  }
+
+  handleKeydown = e => {
+    if (e.code === 'Escape') {
+      this.props.onClose();
+    }
+  };
+
+  handleBackdropClick = event => {
+    if (event.target === event.currentTarget) {
+      this.props.onClose();
+    }
+  };
+
+  render() {
+    return (
+      <div className={css.Overlay} onClick={this.handleBackdropClick}>
         <div className={css.Modal}>
-          <img src=${img} alt="Big img" />
+          <img src={this.props.largeImage} alt="BigImg" />
         </div>
       </div>
-	`
-    )
-    .show();
-};
+    );
+  }
+}
