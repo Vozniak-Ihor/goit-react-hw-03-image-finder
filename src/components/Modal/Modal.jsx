@@ -1,7 +1,9 @@
 import css from './Modal.module.css';
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 export class Modal extends Component {
+  state = {};
   componentDidMount() {
     window.addEventListener('keydown', this.handleKeydown);
   }
@@ -32,3 +34,7 @@ export class Modal extends Component {
     );
   }
 }
+
+Modal.propTypes = {
+  largeImage: PropTypes.string.isRequired,
+};
