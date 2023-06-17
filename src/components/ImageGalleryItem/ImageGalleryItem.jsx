@@ -1,10 +1,10 @@
 import css from './ImageGalleryItem.module.css';
 import PropTypes from 'prop-types';
-export const ImageGalleryItem = ({ image, alt, largeImage, handleClick }) => {
+export const ImageGalleryItem = ({ image, alt, largeImage, handleModalClick }) => {
   return (
     <li
       className={css.ImageGalleryItem}
-      onClick={() => handleClick(largeImage)}
+      onClick={() => handleModalClick(largeImage)}
     >
       <img
         loading="lazy"
@@ -21,5 +21,7 @@ ImageGalleryItem.propTypes = {
   image: PropTypes.string.isRequired,
   alt: PropTypes.string.isRequired,
   largeImage: PropTypes.string.isRequired,
-  handleClick: PropTypes.func.isRequired,
+  handleModalClick: PropTypes.func.isRequired,
 };
+
+export default ImageGalleryItem
