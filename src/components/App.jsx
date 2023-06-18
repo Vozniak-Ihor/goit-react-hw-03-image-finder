@@ -46,19 +46,31 @@ export class App extends Component {
       .then(response => {
         return response.json();
       })
-      .then(({ hits, totalHits }) => {
+      .then(({ hits, totalHits, page }) => {
         if (hits.length === 0) {
-          this.setState({ isEmpty: true, isVisible: false });
+          this.setState({ isEmpty: true });
           return;
         }
-        this.setState(prevState => ({
-          isEmpty: false,
-          images: [...prevState.images, ...hits],
-          showButton: page < Math.ceil(totalHits / 12),
-          isVisible: true,
-          isLoading: false,
-        }));
+
+        if (totalHits > 12) {
+          this.setState(prevState => ({
+            isEmpty: false,
+            images: page === 1 ? hits : [...prevState.images, ...hits],
+            showButton: page < Math.ceil(totalHits / 12),
+            isVisible: true,
+            isLoading: false,
+          }));
+        } else {
+          this.setState(prevState => ({
+            isEmpty: false,
+            images: page === 1 ? hits : [...prevState.images, ...hits],
+            showButton: page < Math.ceil(totalHits / 12),
+            isVisible: false,
+            isLoading: false,
+          }));
+        }
       })
+
       .catch(error => {
         this.setState({ error });
       })
